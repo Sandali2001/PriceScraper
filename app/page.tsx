@@ -1,16 +1,18 @@
+import HeroCarousel from '@/components/HeroCarousel'
+import Searchbar from '@/components/Searchbar'
 import Image from 'next/image'
 import React from 'react'
 
 const Home = () => {
   return (
     <div>
-       <section className='px-6 md:px-20 py-24 border-2 border-red-500'>
+       <section className='px-6 md:px-20 py-24'>
          <div className='flex max-xl:flex-col gap-16'>
-            <div className='flex flex-col justify-center'>
+          <div className='flex flex-col justify-center'>
              <p className='small-text'>
               Smart Shopping Starts here:
               <Image
-              src="/assets/icons/arrow-right.svg"
+               src="/assets/icons/arrow-right.svg"
                alt="arrowright"
                width={16}
                height={16}
@@ -23,14 +25,18 @@ const Home = () => {
              <p className='mt-6'>
               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tempora culpa
              </p>
-             Searchbar
+             <Searchbar />
             </div>
-            HeroCarousel
+            <HeroCarousel />
          </div>
        </section>
        <section className='trending-section'>
         <h2 className='section-text'>Trending</h2>
-        <div className='flex flex-wrap gap-x-8 gap-y-16'></div>
+        <div className='flex flex-wrap gap-x-8 gap-y-16'>
+          {['Apple Iphone 15', 'Book','Sneaker'].map((product) => (
+            <div>{product}</div>
+          ))}
+        </div>
        </section>
     </div>
   )

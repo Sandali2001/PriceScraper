@@ -1,9 +1,12 @@
 import HeroCarousel from '@/components/HeroCarousel'
 import Searchbar from '@/components/Searchbar'
+import { getAllProducts } from '@/lib/actions'
 import Image from 'next/image'
 import React from 'react'
 
-const Home = () => {
+const Home = async () => {
+ 
+  const allProducts = await getAllProducts();
   return (
     <div>
        <section className='px-6 md:px-20 py-24'>

@@ -41,7 +41,7 @@ const productSchema = new mongoose.Schema({
     highestPrice:{type:Number},
     averagePrice:{type:Number},
     discountRate:{type:Number},
-    discription:{type:String},
+    description:{type:String},
     Category:{type:String},
     reviewsCount:{type:String},
     isOutOfStock:{type:Boolean, default:false},

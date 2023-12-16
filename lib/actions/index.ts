@@ -2,48 +2,55 @@
 
 import { revalidatePath } from "next/cache";
 import Product from "../models/product.model";
- import { scrapeAmazonProduct } from "../scraper";
- import { connectToDB } from "@/lib/mongoose";
+import { connectToDB } from "../mongoose";
+import { scrapeAmazonProduct } from "../scraper";
+import { getAveragePrice, getHighestPrice, getLowestPrice } from "../utils";
+import { User } from "@/types";
+//import { generateEmailBody, sendEmail } from "../nodemailer";
 
-export async function scrapAndStoreProduct(productUrl: string){
-    if(!productUrl) return;
+export async function scrapeAndStoreProduct(productUrl: string) {
+  if(!productUrl) return;
 
     try{
       connectToDB();
        const scrapedProduct:any = await scrapeAmazonProduct (productUrl);
 
-       //if(!scrapedProduct) return;
-       let product = scrapedProduct;
+   // const scrapedProduct = await scrapeAmazonProduct(productUrl);
 
-       const existingProduct = await Product.findOne({url: scrapedProduct.url});
+    if(!scrapedProduct) return;
 
-       if(existingProduct){
-        const updatedPriceHistory:any = [
-           ...existingProduct.priceHistory,
-           {price: scrapedProduct.currentPrice}
-        ]
+    let product = scrapedProduct;
 
-        product ={
-          ...scrapedProduct,
-          priceHistory: updatedPriceHistory,
-          //lowestPrice: getLowestPrice(updatedPriceHistory)
-        }
-       }
+    const existingProduct = await Product.findOne({ url: scrapedProduct.url });
 
-       const newProduct = await Product.findOneAndUpdate(
-        {url: scrapedProduct.url},
-        product,
-        {upsert:true, new:true}
-       );
-       revalidatePath(`/products/${newProduct._id}`)
-    } catch (error: any){
+    if(existingProduct) {
+      const updatedPriceHistory: any = [
+        ...existingProduct.priceHistory,
+        { price: scrapedProduct.currentPrice }
+      ]
 
-      throw new Error(`failed to create/update product: ${error.message}`)
+      product = {
+        ...scrapedProduct,
+        priceHistory: updatedPriceHistory,
+       lowestPrice: getLowestPrice(updatedPriceHistory),
+        highestPrice: getHighestPrice(updatedPriceHistory),
+        averagePrice: getAveragePrice(updatedPriceHistory),
+      }
     }
-    
+
+    const newProduct = await Product.findOneAndUpdate(
+      { url: scrapedProduct.url },
+      product,
+      { upsert: true, new: true }
+    );
+
+    revalidatePath(`/products/${newProduct._id}`);
+  } catch (error: any) {
+    throw new Error(`Failed to create/update product: ${error.message}`)
+  }
 }
 
- export async function getProductById(productId: string){
+export async function getProductById(productId: string){
   try{
     connectToDB();
 

@@ -31,7 +31,7 @@ const ProductDetails = async ({params:{id}}: Props) => {
         <div className='flex-1 flex flex-col'>
           <div className='flex justify-between items-start gap-5 flex-wrap pb-6'>
             <div className='flex flex-col gap-3'>
-              <p className='text-[28px] text-secondary font-semibold'>product.title</p>
+              <p className='text-[28px] text-secondary font-semibold'>{product.title}</p>
               <Link
               href={product.url}
               target="_blank"
@@ -108,12 +108,57 @@ const ProductDetails = async ({params:{id}}: Props) => {
 
           <div className='my-7 flex flex-col gap-5'>
             <div className='flex gap-5 flex-wrap'>
-                 <PriceInfoCard/>
+                 <PriceInfoCard
+                  title = "Current Price"
+                  iconSrc="/assets/icons/price-tag.svg"
+                  value={`${product.currency} ${formatNumber(product.currentPrice)}`}
+                  borderColor ='#b6dbff'
+                 />
+                 <PriceInfoCard
+                  title = " Average Price"
+                  iconSrc="/assets/icons/chart.svg"
+                  value={`${product.currency} ${formatNumber(product.averagePrice)}`}
+                  borderColor ='#b6dbff'
+                 />
+                 <PriceInfoCard
+                  title = "Current Price"
+                  iconSrc="/assets/icons/arrow-up.svg"
+                  value={`${product.currency} ${formatNumber(product.highestPrice)}`}
+                  borderColor ='#FCC'
+                 />
+                 <PriceInfoCard
+                  title = "Current Price"
+                  iconSrc="/assets/icons/arrow-down.svg"
+                  value={`${product.currency} ${formatNumber(product.lowestPrice)}`}
+                  borderColor ='#BEFFCS'
+                 />
             </div>
           </div>
+          Modal
         </div>
       </div>
-      
+      <div className='flex flex-col gap-16 border-red-500'>
+         <div className='flex flex-col gap-5'>
+          <h3 className='text-2xl text-secondary font-semibold'>
+              Product Description    
+          </h3>
+
+          <div className='flex flex-col gap-4'>
+            {product.description?.split ('\n')}
+          </div>
+         </div>
+         <button className='btn w-fit mx-auto flex items-center'>
+          <Image
+          src='/assets/icons/bag.svg'
+          alt ='check'
+          width={22}
+          height={22}
+          />
+          <Link href='/' className='text-base text-white'></Link> BUY NOW
+         </button>
+      </div>
+
+
    </div>
   )
 }
